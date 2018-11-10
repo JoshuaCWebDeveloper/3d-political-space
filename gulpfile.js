@@ -25,7 +25,7 @@ gulp.task('default', function () {
 
 Available Gulp Commands:
  - lint
- - bundle
+ - build
  - minify
  - release major|minor|patch
 `
@@ -38,7 +38,7 @@ gulp.task('lint', function () {
 });
 
 //build code using webpack and babel
-gulp.task('bundle', function () {
+gulp.task('build', function () {
     DevOps.lint();
     return DevOps.bundle().done();
 });

@@ -14,7 +14,7 @@
   },
   "scripts": {
     "lint": "gulp lint",
-    "bundle": "gulp bundle",
+    "build": "gulp build",
     "minify": "gulp minify",
     "release": "gulp release"
   },
