@@ -1,10 +1,19 @@
+/* app.js
+ * Main 3D Political Space app file
+ * Dependencies: 
+    - modules: three, whs
+    - classes: Cube, ThreeOrbitControls
+ * Author: Joshua Carter
+ * Created: November 11, 2018
+ */
+"use strict";
+
+//import modules
 import * as THREE from 'three';
 import * as WHS from 'whs';
-
-//create controls
-const OrbitControls = new WHS.OrbitControlsModule({
-    target: new THREE.Vector3(128, 128, 128)
-});
+//include classes
+import { Cube } from './Cube.js';
+import { ThreeOrbitControls } from './ThreeOrbitControls.js';
 
 const app = new WHS.App([
     new WHS.ElementModule({
@@ -31,98 +40,19 @@ const app = new WHS.App([
     }, {
         shadow: true
     }),
-    OrbitControls,
+    new ThreeOrbitControls({
+        target: new THREE.Vector3(128, 128, 128),
+        maxDistance: 2000
+    }),
     new WHS.ResizeModule()
 ]);
 
-// Cube of Lines
-const vectors = [
-        [[0, 0, 0], [0, 0, 255]],
-        [[0, 0, 0], [0, 255, 0]],
-        [[0, 0, 0], [255, 0, 0]],
-
-        [[0, 255, 255], [0, 255, 0]],
-        [[0, 255, 255], [0, 0, 255]],
-        [[0, 255, 255], [255, 255, 255]],
-
-        [[255, 0, 255], [255, 0, 0]],
-        [[255, 0, 255], [255, 255, 255]],
-        [[255, 0, 255], [0, 0, 255]],
-
-        [[255, 255, 0], [255, 255, 255]],
-        [[255, 255, 0], [255, 0, 0]],
-        [[255, 255, 0], [0, 255, 0]]
-    ],
-    thickness = 10;
-for (let i=0; i<vectors.length; i++) {
-    let [[x1, y1, z1], [x2, y2, z2]] = vectors[i];
-    /*
-    new WHS.Line({
-        curve: new THREE.LineCurve3(
-            new THREE.Vector3(...vectors[i][0]),
-            new THREE.Vector3(...vectors[i][1])
-        ),
-        material: new THREE.MeshBasicMaterial({
-            color: 0x0000ff
-        })
-    }).addTo(app);
-    */
-    new WHS.Box({
-        geometry: {
-            width: Math.abs(x2-x1)+thickness,
-            height: Math.abs(y2-y1)+thickness,
-            depth: Math.abs(z2-z1)+thickness
-        },
-        material: new THREE.MeshBasicMaterial({
-            color: i*100000
-        }),
-        position: [
-            Math.abs(x1-Math.abs(x2-x1)/2),
-            Math.abs(y1-Math.abs(y2-y1)/2),
-            Math.abs(z1-Math.abs(z2-z1)/2)
-        ]
-    }).addTo(app);
-}
-
-/*
-//Box
-new WHS.Box({
-    geometry: {
-        width: 255,
-        height: 255,
-        depth: 255
-    },
-    material: new THREE.MeshBasicMaterial({
-        color: 0x0000ff
-    }),
-    position: [0, 0, 0]
+//render components
+new Cube({
+    center: [127.5, 127.5, 127.5],
+    size: 255,
+    thickness: 10
 }).addTo(app);
-*/
-
-/*
-// Lights
-new WHS.PointLight({
-    light: {
-        intensity: 0.5,
-        distance: 100
-    },
-
-    shadow: {
-        fov: 90
-    },
-
-    position: new THREE.Vector3(0, 10, 10)
-}).addTo(app);
-
-new WHS.AmbientLight({
-    light: {
-        intensity: 0.4
-    }
-}).addTo(app);
-*/
 
 // Start the app
 app.start();
-
-//set three.js params
-OrbitControls.controls.maxDistance = 2000;
