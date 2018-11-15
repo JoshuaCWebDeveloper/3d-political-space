@@ -8,6 +8,8 @@
 //import modules
 import { MeshBasicMaterial } from 'three';
 import { Box } from 'whs';
+//include utils
+import { generateGradientTexture } from './util.js';
 //create class to represent a basic object
 class Cube {
     
@@ -17,6 +19,8 @@ class Cube {
         //create start and end points of cube
         var [x1, y1, z1] = center.map( p => p - size/2 ),
             [x2, y2, z2] = center.map( p => p + size/2 ),
+            //store center
+            [cx, cy, cz] = center,
             vectors;
         //initialize collection of WHS components
         this.components = [];
@@ -43,23 +47,97 @@ class Cube {
         //loop the vectors
         for (let i=0; i<vectors.length; i++) {
             //create start and end points of vector
-            let [[x1, y1, z1], [x2, y2, z2]] = vectors[i];
+            let [[x1, y1, z1], [x2, y2, z2]] = vectors[i],
+                //calculate raw dimensions (w=Math.abs(x2-x1))
+                [w, h, d] = vectors[i][1].map((p, idx) => Math.abs(p-vectors[i][0][idx])),
+                //calculate position (center) of box
+                px = (x1+x2)/2,
+                py = (y1+y2)/2,
+                pz = (z1+z2)/2,
+                //create colors (convert x,y,z coordinates to hex RGB)
+                colors = [
+                    "#" + x1.toString(16).padStart(2, "0") +
+                        y1.toString(16).padStart(2, "0") +
+                        z1.toString(16).padStart(2, "0"),
+                    "#" + x2.toString(16).padStart(2, "0") +
+                        y2.toString(16).padStart(2, "0") +
+                        z2.toString(16).padStart(2, "0")
+                ],
+                material;
+            
+            /* 
+             * Create an array of materials,
+             * one material for each side of the box we will create.
+             * The gradients will need to run in different directions based on direction of box.
+             * The ends of the box will need to be a solid color.
+             * 
+             * An array material will be converted to a gradient,
+             * the array is the linearCoordinates of the gradient.
+             * A string material will be converted to a solid color.
+             * 
+             * Order of materials based on which side they are applied to:
+             *  +x, -x, +y, -y, +z, -z ]
+             * 
+             */
+            
+            //x-axis boxes
+            if (w) {
+                material = [
+                    x1>x2 ? colors[0] : colors[1],
+                    x1<x2 ? colors[0] : colors[1],
+                    [x1, y1, x2, y2],
+                    [x1, y1, x2, y2],
+                    [x1, y1, x2, y2],
+                    [x2, y2, x1, y1]
+                ];
+            }
+            else if (h) {
+                material = [
+                    [x2, y2, x1, y1],
+                    [x2, y2, x1, y1],
+                    y1>y2 ? colors[0] : colors[1],
+                    y1<y2 ? colors[0] : colors[1],
+                    [x2, y2, x1, y1],
+                    [x2, y2, x1, y1]
+                ];
+            }
+            else if (d) {
+                material = [
+                    [z2, y2, z1, y1],
+                    [z1, y1, z2, y2],
+                    [x1, z1, x2, z2],
+                    [x2, z2, x1, z1],
+                    z1>z2 ? colors[0] : colors[1],
+                    z1<z2 ? colors[0] : colors[1]
+                ];
+            }
+            
             //create Box, add it to components
             this.components.push(
                 new Box({
                     geometry: {
-                        width: Math.abs(x2-x1)+thickness,
-                        height: Math.abs(y2-y1)+thickness,
-                        depth: Math.abs(z2-z1)+thickness
+                        width: w+thickness,
+                        height: h+thickness,
+                        depth: d+thickness
                     },
-                    material: new MeshBasicMaterial({
-                        color: i*100000
+                    material: material.map(function (r) {
+                        //if this is a string
+                        if (typeof r == "string") {
+                            //then it is a color, convert it to a hexadecimal number
+                            return new MeshBasicMaterial({
+                                color: Number(r.replace("#", "0x"))
+                            });
+                        }
+                        //else, it is linearCoordinates for a gradient
+                        return new MeshBasicMaterial({
+                            map: generateGradientTexture({
+                                colors: colors,
+                                linearCoordinates: r,
+                                size: size
+                            })
+                        });
                     }),
-                    position: [
-                        (x1+x2)/2,
-                        (y1+y2)/2,
-                        (z1+z2)/2
-                    ]
+                    position: [px, py, pz]
                 })
             );
             /* alternate method uses Line (has no thickness) instead of Box
