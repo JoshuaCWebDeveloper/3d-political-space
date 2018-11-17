@@ -41,7 +41,7 @@ const app = new WHS.App([
         shadow: true
     }),
     new ThreeOrbitControls({
-        target: new THREE.Vector3(128, 128, 128),
+        target: new THREE.Vector3(127.5, 127.5, 127.5),
         maxDistance: 2000
     }),
     new WHS.ResizeModule()
