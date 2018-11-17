@@ -125,10 +125,15 @@ class Cube {
                     material: material.map(function (r) {
                         //if this is a string
                         if (typeof r == "string") {
+                            /*
                             //then it is a color, convert it to a hexadecimal number
                             return new MeshBasicMaterial({
-                                color: Number(r.replace("#", "0x"))
+                                color: Number(r.replace("#", "0x")),
+                                map: new TextureLoader().load('img/Wood_Texture_Grayscale_360x360.jpg')
                             });
+                            */
+                            //return no texture for solid colors
+                            return null;
                         }
                         //else, it is linearCoordinates for a gradient
                         return new MeshBasicMaterial({
