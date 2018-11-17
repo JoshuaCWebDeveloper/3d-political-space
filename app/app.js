@@ -54,5 +54,25 @@ new Cube({
     thickness: 10
 }).addTo(app);
 
+//render lights
+//environmental ambient light
+new WHS.AmbientLight({
+    intensity: 0.9
+}).addTo(app);
+
+//light outside cube
+new WHS.PointLight({
+    intensity: 1.5,
+    distance: 600,
+    position: new THREE.Vector3(280, 280, 280)
+}).addTo(app);
+
+//light inside cube
+new WHS.PointLight({
+    intensity: 1.1,
+    distance: 400,
+    position: new THREE.Vector3(200, 200, 200)
+}).addTo(app);
+
 // Start the app
 app.start();

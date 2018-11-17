@@ -6,7 +6,7 @@
  */
 "use strict";
 //import modules
-import { MeshBasicMaterial, TextureLoader } from 'three';
+import { MeshPhongMaterial } from 'three';
 import { Box } from 'whs';
 //include utils
 import { generateGradientTexture } from './util.js';
@@ -136,7 +136,7 @@ class Cube {
                             return null;
                         }
                         //else, it is linearCoordinates for a gradient
-                        return new MeshBasicMaterial({
+                        return new MeshPhongMaterial({
                             map: generateGradientTexture({
                                 colors: colors,
                                 imageOpacity: 0.8,
