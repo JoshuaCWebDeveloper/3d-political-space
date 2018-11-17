@@ -6,7 +6,7 @@
  */
 "use strict";
 //import modules
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial, TextureLoader } from 'three';
 import { Box } from 'whs';
 //include utils
 import { generateGradientTexture } from './util.js';
@@ -50,6 +50,8 @@ class Cube {
             let [[x1, y1, z1], [x2, y2, z2]] = vectors[i],
                 //calculate raw dimensions (w=Math.abs(x2-x1))
                 [w, h, d] = vectors[i][1].map((p, idx) => Math.abs(p-vectors[i][0][idx])),
+                //add thickness to dimensions
+                [rw, rh, rd] = [w, h, d].map(d => d+thickness),
                 //calculate position (center) of box
                 px = (x1+x2)/2,
                 py = (y1+y2)/2,
@@ -116,9 +118,9 @@ class Cube {
             this.components.push(
                 new Box({
                     geometry: {
-                        width: w+thickness,
-                        height: h+thickness,
-                        depth: d+thickness
+                        width: rw,
+                        height: rh,
+                        depth: rd
                     },
                     material: material.map(function (r) {
                         //if this is a string
@@ -132,8 +134,13 @@ class Cube {
                         return new MeshBasicMaterial({
                             map: generateGradientTexture({
                                 colors: colors,
+                                imageOpacity: 0.8,
+                                imageTexture: 'img/Wood_Texture_Grayscale_360x360.jpg',
                                 linearCoordinates: r,
-                                size: size
+                                canvasDimensions: [
+                                    (Math.abs(r[0]-r[2])+thickness),
+                                    (Math.abs(r[1]-r[3])+thickness)
+                                ]
                             })
                         });
                     }),
