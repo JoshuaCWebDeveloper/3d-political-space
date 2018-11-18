@@ -15,19 +15,23 @@ import * as WHS from 'whs';
 import { Cube } from './Cube.js';
 import { ThreeOrbitControls } from './ThreeOrbitControls.js';
 
+//create camera
+const camera = new WHS.CameraModule({
+    far: 3000,
+    position: {
+        x: 422,
+        y: 360,
+        z: 369
+    }
+});
+
+//create app
 const app = new WHS.App([
     new WHS.ElementModule({
         container: document.getElementById('view-container')
     }),
     new WHS.SceneModule(),
-    new WHS.CameraModule({
-        far: 3000,
-        position: {
-            x: 422,
-            y: 360,
-            z: 369
-        }
-    }),
+    camera,
     new WHS.RenderingModule({
         bgColor: 0x162129,
 
@@ -48,11 +52,13 @@ const app = new WHS.App([
 ]);
 
 //render components
-new Cube({
+const cube = new Cube({
+    camera: camera.camera,
     center: [127.5, 127.5, 127.5],
     size: 255,
     thickness: 10
-}).addTo(app);
+});
+cube.addTo(app);
 
 //render lights
 //environmental ambient light
@@ -73,6 +79,11 @@ new WHS.PointLight({
     distance: 400,
     position: new THREE.Vector3(200, 200, 200)
 }).addTo(app);
+
+//create loop
+new WHS.Loop(function () {
+    cube.animate();
+}).start(app);
 
 // Start the app
 app.start();

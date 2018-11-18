@@ -6,8 +6,10 @@
  */
 "use strict";
 //import modules
-import { MeshPhongMaterial } from 'three';
+import { FontLoader, MeshPhongMaterial } from 'three';
 import { Box } from 'whs';
+//include classes
+import { Label } from './Label.js';
 //include utils
 import { generateGradientTexture } from './util.js';
 //create class to represent a basic object
@@ -15,34 +17,51 @@ class Cube {
     
     // - center (array - number) [x, y, z] of center point of cube
     // - size (number) Value to serve as width, height, and depth of cube
-    constructor ({center=[0, 0, 0], size=100, thickness=0}) {
+    constructor ({center=[0, 0, 0], size=100, thickness=0, camera=null}) {
         //create start and end points of cube
         var [x1, y1, z1] = center.map( p => p - size/2 ),
             [x2, y2, z2] = center.map( p => p + size/2 ),
             //store center
             [cx, cy, cz] = center,
-            vectors;
+            vertices, vectors, labels;
+        //store camera
+        this.camera = camera;
         //initialize collection of WHS components
         this.components = [];
+        this.textComponents = [];
+        //track which instances we have been added to
+        this.addedToInstances = [];
+        
+        //define 8 vertices of cube
+        vertices = [
+            [x1, y1, z1],
+            [x1, y1, z2],
+            [x1, y2, z1],
+            [x1, y2, z2],
+            [x2, y1, z1],
+            [x2, y1, z2],
+            [x2, y2, z1],
+            [x2, y2, z2]
+        ];
         
         //build cube comprised of 12 edges
         //three edges for each of 4 opposite corners
         vectors = [
-            [[x1, y1, z1], [x1, y1, z2]],
-            [[x1, y1, z1], [x1, y2, z1]],
-            [[x1, y1, z1], [x2, y1, z1]],
+            [vertices[0], vertices[1]],
+            [vertices[0], vertices[2]],
+            [vertices[0], vertices[4]],
 
-            [[x1, y2, z2], [x1, y2, z1]],
-            [[x1, y2, z2], [x1, y1, z2]],
-            [[x1, y2, z2], [x2, y2, z2]],
+            [vertices[3], vertices[2]],
+            [vertices[3], vertices[1]],
+            [vertices[3], vertices[7]],
 
-            [[x2, y1, z2], [x2, y1, z1]],
-            [[x2, y1, z2], [x2, y2, z2]],
-            [[x2, y1, z2], [x1, y1, z2]],
+            [vertices[5], vertices[4]],
+            [vertices[5], vertices[7]],
+            [vertices[5], vertices[1]],
 
-            [[x2, y2, z1], [x2, y2, z2]],
-            [[x2, y2, z1], [x2, y1, z1]],
-            [[x2, y2, z1], [x1, y2, z1]]
+            [vertices[6], vertices[7]],
+            [vertices[6], vertices[4]],
+            [vertices[6], vertices[2]]
         ];
         //loop the vectors
         for (let i=0; i<vectors.length; i++) {
@@ -179,6 +198,68 @@ class Cube {
             position: [0, 0, 0]
         }).addTo(app);
         */
+        
+        // create textual label for each vertice of the cube
+        // (ordered in sync with vertices)
+        labels = [
+            "Medievalist",
+            "Conservative",
+            "Right Wing",
+            `Anti-intrusion
+Libertarian`,
+            `Security &
+Health & Safety
+Statist`,
+            "Leftist",
+            "Progressive",
+            "Liberal"
+        ];
+        
+        //load font
+        new FontLoader().load(
+            "fonts/helvetiker_regular.typeface.json",
+            (font) => {
+                //loop the labels
+                for (let i=0; i<labels.length; i++) {
+                    let [px, py, pz] = vertices[i],
+                        //amount to move away from cube
+                        distance = size/7,
+                        text;
+                    //adjust position
+                    px += distance * (px>cx ? 1 : -1);
+                    py += distance * (py>cy ? 2 : -2);
+                    pz += distance * (pz>cz ? 1 : -1);
+                    //create Text
+                    text = new Label({
+                        text: labels[i],
+                        font: font,
+                        geometry: {
+                            size: size[100],
+                            height: 0
+                        },
+                        material: new MeshPhongMaterial({
+                            color: 0xffffff
+                        }),
+                        position: [px, py, pz]
+                    });
+                    //center the pivot point of the text
+                    text.geometry.center();
+                    //add it to components
+                    this.components.push(text);
+                    this.textComponents.push(text);
+                    //add it to any instances we have already been added to
+                    this._addLate(text);
+                }
+            }
+        );
+    }
+            
+    _addLate (component) {
+        //loop instances we have already been added to
+        for (let i=0; i<this.addedToInstances.length; i++) {
+            //add to instance
+            component.addTo(this.addedToInstances[i]);
+        }
     }
     
     addTo (instance) {
@@ -187,6 +268,20 @@ class Cube {
         for (let i=0; i<this.components.length; i++) {
             //call addTo()
             this.components[i].addTo(instance);
+        }
+        //we have been added to this instance
+        this.addedToInstances.push(instance);
+    }
+    
+    animate () {
+        //if we don't have a camera
+        if (!this.camera) {
+            //do nothing
+            return;
+        }   //else, we have a camera
+        //make each text component look at the camera
+        for (let i=0; i<this.textComponents.length; i++) {
+            this.textComponents[i].native.lookAt(this.camera.position);
         }
     }
 
