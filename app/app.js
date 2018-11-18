@@ -19,9 +19,9 @@ import { ThreeOrbitControls } from './ThreeOrbitControls.js';
 const camera = new WHS.CameraModule({
     far: 3000,
     position: {
-        x: 422,
-        y: 360,
-        z: 369
+        x: 471,
+        y: 399,
+        z: 409
     }
 });
 
