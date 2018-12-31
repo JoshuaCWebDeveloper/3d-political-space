@@ -2,7 +2,7 @@
  * Main 3D Political Space app file
  * Dependencies: 
     - modules: three, whs
-    - classes: Cube, ThreeOrbitControls
+    - classes: Cube, Location, ThreeOrbitControls
  * Author: Joshua Carter
  * Created: November 11, 2018
  */
@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import * as WHS from 'whs';
 //include classes
 import { Cube } from './Cube.js';
+import { Location } from './Location.js';
 import { ThreeOrbitControls } from './ThreeOrbitControls.js';
 
 //create camera
@@ -59,6 +60,14 @@ const cube = new Cube({
     thickness: 10
 });
 cube.addTo(app);
+
+const location1 = new Location({
+    point: [210, 200, 100],
+    vectors: [[245, 50, 220], [235, 230, 50]],
+    thickness: 5,
+    cube
+});
+location1.addTo(app);
 
 //render lights
 //environmental ambient light
