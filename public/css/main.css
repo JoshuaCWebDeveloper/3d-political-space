@@ -4,6 +4,8 @@
      - Structure
      - Look and Feel
      - Common Elements
+   - CHAPTER 2: Container App
+     - Title
  */
 
 /* CHAPTER 1: GLOBAL STYLES */
@@ -81,4 +83,18 @@ body {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 100%;
+}
+
+/* CHAPTER 2: Container App */
+/* Section 2.1: Title */
+#space-title {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+#space-title h1 {
+    font-size: .4em;
+    margin: .5em;
+    text-align: center;
 }

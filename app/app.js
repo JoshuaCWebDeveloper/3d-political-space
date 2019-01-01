@@ -1,7 +1,7 @@
 /* app.js
  * Main 3D Political Space app file
  * Dependencies: 
-    - modules: query-string, three, whs
+    - modules: query-string, react, react-dom, three, whs
     - classes: Cube, Location, ThreeOrbitControls
  * Author: Joshua Carter
  * Created: November 11, 2018
@@ -10,6 +10,8 @@
 
 //import modules
 import qs from 'query-string';
+import ReactDom from 'react-dom';
+import React from 'react';
 import * as THREE from 'three';
 import * as WHS from 'whs';
 //include classes
@@ -24,6 +26,19 @@ const params = Object.assign({
     vectors: []
 }, qs.parse(window.location.search));
 
+//render HTML
+ReactDom.render(
+    (
+        <div className="app">
+            <div id="space-title">
+                <h1>{params.title}</h1>
+            </div>
+        
+            <div id="app-container"></div>
+        </div>
+    ), document.getElementById('view-container')
+);
+
 //create camera
 const camera = new WHS.CameraModule({
     far: 3000,
@@ -37,7 +52,7 @@ const camera = new WHS.CameraModule({
 //create app
 const app = new WHS.App([
     new WHS.ElementModule({
-        container: document.getElementById('view-container')
+        container: document.getElementById('app-container')
     }),
     new WHS.SceneModule(),
     camera,
