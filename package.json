@@ -1,6 +1,6 @@
 {
   "name": "3d-political-space",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A Javascript App that models a 3d politcal space concept",
   "dependencies": {
     "extend": "^3.0.2",
