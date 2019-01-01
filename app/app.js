@@ -84,13 +84,18 @@ const cube = new Cube({
 });
 cube.addTo(app);
 
-const location1 = new Location({
-    point: [210, 200, 100],
-    vectors: [[245, 50, 220], [235, 230, 50]],
-    thickness: 5,
-    cube
-});
-location1.addTo(app);
+//if we were given a location
+if (params.location) {
+    //render it
+    const location1 = new Location({
+        point: params.location.split(",").map(it => parseInt(it)),
+        vectors: params.vectors ? params.vectors.map(
+            it => it.split(",").map(it => parseInt(it))
+        ) : [],
+        thickness: 5
+    });
+    location1.addTo(app);
+}
 
 //render lights
 //environmental ambient light
