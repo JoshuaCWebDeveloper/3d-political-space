@@ -88,9 +88,9 @@ cube.addTo(app);
 if (params.location) {
     //render it
     const location1 = new Location({
-        point: params.location.split(",").map(it => parseInt(it)),
+        point: params.location.split(",").map(it => parseFloat(it)),
         vectors: params.vectors ? params.vectors.map(
-            it => it.split(",").map(it => parseInt(it))
+            it => it.split(",").map(it => parseFloat(it))
         ) : [],
         thickness: 5
     });
