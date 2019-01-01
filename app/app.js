@@ -25,6 +25,10 @@ const params = Object.assign({
     location: "",
     vectors: []
 }, qs.parse(window.location.search));
+//sanitize
+if (params.vectors && !Array.isArray(params.vectors)) {
+    params.vectors = [params.vectors];
+}
 
 //render HTML
 ReactDom.render(
