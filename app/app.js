@@ -1,7 +1,7 @@
 /* app.js
  * Main 3D Political Space app file
  * Dependencies: 
-    - modules: three, whs
+    - modules: query-string, three, whs
     - classes: Cube, Location, ThreeOrbitControls
  * Author: Joshua Carter
  * Created: November 11, 2018
@@ -9,12 +9,20 @@
 "use strict";
 
 //import modules
+import qs from 'query-string';
 import * as THREE from 'three';
 import * as WHS from 'whs';
 //include classes
 import { Cube } from './Cube.js';
 import { Location } from './Location.js';
 import { ThreeOrbitControls } from './ThreeOrbitControls.js';
+
+//parse params
+const params = Object.assign({
+    title: '',
+    location: "",
+    vectors: []
+}, qs.parse(window.location.search));
 
 //create camera
 const camera = new WHS.CameraModule({
