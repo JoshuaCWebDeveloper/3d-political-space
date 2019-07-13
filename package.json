@@ -4,11 +4,13 @@
   "description": "A Javascript App that models a 3d politcal space concept",
   "dependencies": {
     "extend": "^3.0.2",
+    "jcscript": "^1.4.1",
     "nodegit": "^0.23.0",
+    "prop-types": "^15.7.2",
     "q": "^1.5.1",
     "query-string": "^6.2.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "sinon": "^7.1.1",
     "three": "^0.99.0",
     "whs": "^2.1.9"
