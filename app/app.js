@@ -24,7 +24,7 @@ const params = Object.assign({
     title: '',
     location: "",
     vectors: []
-}, qs.parse(window.location.search));
+}, qs.parse(window.location.search, {arrayFormat: 'index'}));
 //sanitize
 if (params.vectors && !Array.isArray(params.vectors)) {
     params.vectors = [params.vectors];
