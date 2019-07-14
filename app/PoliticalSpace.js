@@ -1,7 +1,7 @@
 /* PoliticalSpace.js
  * Top-level react component for rendering the 3D space
  * Dependencies: 
-    - modules: query-string, react, react-dom
+    - modules: react, react-dom, prop-types
     - classes: ThreeSpace
  * Author: Joshua Carter
  * Created: July 13, 2019
@@ -13,6 +13,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 //import classes
 import { ThreeSpace } from './three-space/ThreeSpace.js';
+
 //create PoliticalSpace component
 function PoliticalSpace (props) {
     //set id
@@ -47,5 +48,6 @@ PoliticalSpace.propTypes = {
     location: PropTypes.arrayOf(PropTypes.number),
     vectors: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
 };
+
 //export PoliticalSpace component
 export { PoliticalSpace };
