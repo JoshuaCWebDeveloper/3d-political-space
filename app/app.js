@@ -1,53 +1,35 @@
 /* app.js
  * Main 3D Political Space app file
  * Dependencies: 
-    - modules: query-string, react, react-dom
+    - modules: jcscript, query-string, react, react-dom
     - components: PoliticalSpace
+    - other: url utils
  * Author: Joshua Carter
  * Created: November 11, 2018
  */
 "use strict";
 //import modules
-import qs from 'query-string';
+import { JCFluxStore } from 'jcscript';
 import ReactDom from 'react-dom';
 import React from 'react';
 //include components
-import { PoliticalSpace } from './PoliticalSpace.js';
+import { App } from './AppComponent.js';
+//include utils
+import url from './url.js';
 
-//backwards compatible params
-const backParams = Object.assign({
-    vectors: false
-}, qs.parse(window.location.search));
-//fetch params
-const params = Object.assign({
+//create flux store
+var Space = new JCFluxStore({
     title: '',
-    location: "",
+    location: [],
     vectors: []
-}, qs.parse(window.location.search, {arrayFormat: 'index'}));
-//sanitize
-if (params.vectors && !Array.isArray(params.vectors)) {
-    params.vectors = [params.vectors];
-}
-//parse
-params.location = params.location ? params.location.split(",")
-    .map(it => parseFloat(it)) : [];
-params.vectors = params.vectors ? params.vectors.map(
-    it => it.split(",").map(it => parseFloat(it))
-) : [];
-//merge backwards compatible params
-if (Array.isArray(backParams.vectors)) {
-    params.vectors = params.vectors.concat(backParams.vectors);
-}
+});
 
+//update store with url params
+Space.update(url.parse(window.location.search));
+        
 //render HTML
 ReactDom.render(
     (
-        <div className="app">
-            <div id="space-title">
-                <h1>{params.title}</h1>
-            </div>
-        
-            <PoliticalSpace location={params.location} vectors={params.vectors} />
-        </div>
+        <App Space={Space} />
     ), document.getElementById('view-container')
 );
