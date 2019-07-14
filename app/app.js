@@ -19,6 +19,10 @@ import { Cube } from './Cube.js';
 import { Location } from './Location.js';
 import { ThreeOrbitControls } from './ThreeOrbitControls.js';
 
+//backwards compatible params
+const backParams = Object.assign({
+    vectors: false
+}, qs.parse(window.location.search));
 //parse params
 const params = Object.assign({
     title: '',
@@ -28,6 +32,10 @@ const params = Object.assign({
 //sanitize
 if (params.vectors && !Array.isArray(params.vectors)) {
     params.vectors = [params.vectors];
+}
+//merge backwards compatible params
+if (Array.isArray(backParams.vectors)) {
+    params.vectors = params.vectors.concat(backParams.vectors);
 }
 
 //render HTML
