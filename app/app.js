@@ -14,6 +14,10 @@ import React from 'react';
 //include components
 import { PoliticalSpace } from './PoliticalSpace.js';
 
+//backwards compatible params
+const backParams = Object.assign({
+    vectors: false
+}, qs.parse(window.location.search));
 //fetch params
 const params = Object.assign({
     title: '',
@@ -30,7 +34,11 @@ params.location = params.location ? params.location.split(",")
 params.vectors = params.vectors ? params.vectors.map(
     it => it.split(",").map(it => parseFloat(it))
 ) : [];
-        
+//merge backwards compatible params
+if (Array.isArray(backParams.vectors)) {
+    params.vectors = params.vectors.concat(backParams.vectors);
+}
+
 //render HTML
 ReactDom.render(
     (
