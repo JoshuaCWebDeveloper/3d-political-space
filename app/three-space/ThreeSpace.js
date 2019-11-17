@@ -45,6 +45,9 @@ class ThreeSpace {
         this._Settings = new Settings(settings);
         //init app
         this._app = this._createApp();
+        //DEMO
+        //this._demoAllPossibleLocations();
+        this._demoSecondaryPossibleLocations();
         //start the app
         this._app.start();
     }
@@ -135,6 +138,101 @@ class ThreeSpace {
 
         //return the app
         return app;
+    }
+    
+    /*
+     * Primary formula: fundamental axis position
+     * Secondary formula: affinity center of mass
+     */
+    _demoSecondaryPossibleLocations () {
+        //define layout
+        var size = 255,
+            axes = [
+                [0, 0, 0],          //medievalist: 
+                [size, 0, 0],       //statist: 
+                [size, 0, size],    //leftist: 
+                [0, 0, size]        //conservative: 
+            ],
+            step = 20,
+            threeApp = this._app,
+            loopAxis = function (which, fundamental, prevAffinities=[]) {
+                //loop axis
+                for (let p=0; p<=100; p+=step) {
+                    let affinities = prevAffinities.concat(p/100),
+                        location;
+                    
+                    //if this is NOT the final loop
+                    if (which+1 < axes.length) {
+                        //recurse
+                        loopAxis(which+1, fundamental, affinities);
+                    }
+                    else {
+                        //this is the final loop, render a point
+                        location = new Location({
+                            point: ThreeSpace.calculatePosition(fundamental, affinities),
+                            vectors: [],
+                            thickness: 5
+                        });
+                        location.addTo(threeApp);
+                    }
+                }
+            };
+        
+        //loop axes
+        for (let axis=0; axis<axes.length; axis++) {
+            loopAxis(0, axis);
+        } 
+    }
+    
+    /*
+     * Uses Affinity center of mass formula.
+     */
+    _demoAllPossibleLocations () {
+        //define layout
+        var size = 245,
+            axisDistance = 235,
+            axes = [
+                [10, 10, 10],          //medievalist: 
+                //[size, 10, 10],       //statist: 
+                //[size, 10, size],    //leftist: 
+                //[10, 10, size]        //conservative: 
+            ],
+            step = 20,
+            threeApp = this._app,
+            loopAxis = function (which, prevPoints=[]) {
+                //loop axis
+                for (let p=0; p<=100; p+=step) {
+                    let distance = axisDistance * (p/100),
+                        //add point
+                        points = prevPoints.concat([
+                            axes[which].map(it => it + distance * (it > 100 ? -1 : 1))
+                        ]),
+                        location;
+                    
+                    //if this is NOT the final loop
+                    if (which+1 < axes.length) {
+                        //recurse
+                        loopAxis(which+1, points);
+                    }
+                    else {
+                        //this is the final loop, render a point
+                        location = new Location({
+                            point: [0,1,2].map(idx => 
+                                points.reduce(
+                                    (sum, point) => { return sum + point[idx]; },
+                                    0
+                                )/axes.length
+                            ),
+                            vectors: [],
+                            thickness: 5
+                        });
+                        location.addTo(threeApp);
+                    }
+                }
+            };
+        
+        //loop axes
+        loopAxis(0);
     }
     
     
