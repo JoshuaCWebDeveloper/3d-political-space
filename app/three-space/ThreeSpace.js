@@ -92,7 +92,7 @@ class ThreeSpace {
         const cube = new Cube({
             camera: camera.camera,
             center: [127.5, 127.5, 127.5],
-            size: 255,
+            size: 275,  //includes thickness (on both sides)
             thickness: 10
         });
         cube.addTo(app);
@@ -118,14 +118,14 @@ class ThreeSpace {
         new WHS.PointLight({
             intensity: 1.5,
             distance: 600,
-            position: new THREE.Vector3(280, 280, 280)
+            position: new THREE.Vector3(300, 300, 300)
         }).addTo(app);
 
         //light inside cube
         new WHS.PointLight({
             intensity: 1.1,
             distance: 400,
-            position: new THREE.Vector3(200, 200, 200)
+            position: new THREE.Vector3(210, 210, 210)
         }).addTo(app);
 
         //create loop

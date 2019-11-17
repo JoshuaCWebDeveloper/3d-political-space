@@ -77,12 +77,12 @@ class Cube {
                 pz = (z1+z2)/2,
                 //create colors (convert x,y,z coordinates to hex RGB)
                 colors = [
-                    "#" + x1.toString(16).padStart(2, "0") +
-                        y1.toString(16).padStart(2, "0") +
-                        z1.toString(16).padStart(2, "0"),
-                    "#" + x2.toString(16).padStart(2, "0") +
-                        y2.toString(16).padStart(2, "0") +
-                        z2.toString(16).padStart(2, "0")
+                    "#" + Math.min(255, Math.max(0, x1)).toString(16).padStart(2, "0") +
+                        Math.min(255, Math.max(0, y1)).toString(16).padStart(2, "0") +
+                        Math.min(255, Math.max(0, z1)).toString(16).padStart(2, "0"),
+                    "#" + Math.min(255, Math.max(0, x2)).toString(16).padStart(2, "0") +
+                        Math.min(255, Math.max(0, y2)).toString(16).padStart(2, "0") +
+                        Math.min(255, Math.max(0, z2)).toString(16).padStart(2, "0")
                 ],
                 material;
             
