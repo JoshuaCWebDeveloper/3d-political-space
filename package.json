@@ -10,7 +10,7 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "sinon": "^7.1.1",
-    "three": "^0.99.0",
+    "three": "^0.125.0",
     "whs": "^2.1.9"
   },
   "devDependencies": {
